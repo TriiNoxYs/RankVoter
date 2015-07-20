@@ -36,22 +36,21 @@ public class Main extends JavaPlugin implements Listener{
         saveDefaultConfig();
     }
     
-    @SuppressWarnings("unchecked")
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         if(sender instanceof Player){
             Player p = (Player) sender;
             
             if(label.equalsIgnoreCase("rankvoter")){
                 if(args.length == 0){
-                    sender.sendMessage("§cUsage: /rankvoter <add | remove | infos> [rank]");
+                    p.sendMessage("§cUsage: /rankvoter <add | remove | infos> [rank]");
                     return true;
                 }
                 if(args[0].equalsIgnoreCase("add")){
                     if(args.length == 1){
-                        sender.sendMessage("§cUsage: /rankvoter add <rank>");
+                        p.sendMessage("§cUsage: /rankvoter add <rank>");
                         return true;
                     }else{
-                        ArrayList<String> ranks = (ArrayList<String>) config.getList("ranks");
+                        ArrayList<String> ranks = (ArrayList<String>) config.getStringList("ranks");
                         if(ranks.contains(args[1])){
                            p.sendMessage(config.getString("RANK_ALREADY_SAVED")
                                    .replaceAll("%player%", p.getName())
@@ -72,10 +71,10 @@ public class Main extends JavaPlugin implements Listener{
                 }
                 if(args[0].equalsIgnoreCase("remove")){
                     if(args.length == 1){
-                        sender.sendMessage("§cUsage: /rankvoter remove <rank>");
+                        p.sendMessage("§cUsage: /rankvoter remove <rank>");
                         return true;
                     }else{
-                        ArrayList<String> ranks = (ArrayList<String>) config.getList("ranks");
+                        ArrayList<String> ranks = (ArrayList<String>) config.getStringList("ranks");
                         if(ranks.contains(args[1])){
                             p.sendMessage(config.getString("RANK_REMOVED")
                                     .replaceAll("%player%", p.getName())
@@ -83,6 +82,7 @@ public class Main extends JavaPlugin implements Listener{
                                     .replace('&', '§'));
                             ranks.remove(args[1]);
                             getConfig().set("ranks", ranks);
+                            saveConfig();
                             return true;
                          }else{
                              p.sendMessage(config.getString("RANK_NOT_FOUND")
@@ -94,12 +94,12 @@ public class Main extends JavaPlugin implements Listener{
                     }
                 }
                 if(args[0].equalsIgnoreCase("infos")){
-                    sender.sendMessage("");
-                    sender.sendMessage("§8-------------------------");
-                    sender.sendMessage("§a Développeur: §eTriiNoxYs");
-                    sender.sendMessage("§a Plugin: §eRankVoter");
-                    sender.sendMessage("§a Version: §e"+ getDescription().getVersion());
-                    sender.sendMessage("§8-------------------------");
+                    p.sendMessage("");
+                    p.sendMessage("§8-------------------------");
+                    p.sendMessage("§a Développeur: §eTriiNoxYs");
+                    p.sendMessage("§a Plugin: §eRankVoter");
+                    p.sendMessage("§a Version: §e"+ getDescription().getVersion());
+                    p.sendMessage("§8-------------------------");
                 }
                 return true;
             }else if(label.equalsIgnoreCase("vote")){
@@ -108,7 +108,7 @@ public class Main extends JavaPlugin implements Listener{
                         p.sendMessage("§cUsage: /vote " + args[0] + " <joueur>");
                         return true;
                     }
-                    ArrayList<String> ranks = (ArrayList<String>) config.getList("ranks");
+                    ArrayList<String> ranks = (ArrayList<String>) config.getStringList("ranks");
                     
                     if(ranks.contains(args[0])){
                         Bukkit.broadcastMessage(config
@@ -165,7 +165,11 @@ public class Main extends JavaPlugin implements Listener{
                                 .replaceAll("%player%", p.getName())
                                 .replaceAll("%target%", args[1])
                                 .replace('&', '§'));
-                    }else p.sendMessage("§Usage: /vote <oui | non> <joueur>");
+                    }
+                    else p.sendMessage("§cUsage: /vote <oui | non> <joueur>");
+                }
+                else {
+                    p.sendMessage("§cUsage: /vote <oui | non> <joueur> OR /vote <grade>");
                 }
             }
         }else sender.sendMessage("You must be a player to perform this command !");

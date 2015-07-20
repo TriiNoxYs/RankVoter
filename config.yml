@@ -1,18 +1,17 @@
 votes-requiered: 6
 
-ranks:
-
-
-
-#You can use %player% to write te player's name, %rank% to write the rank and the color codes like &4 or &e
+#You can use %player% to write the player's name, %rank% to write the rank and the color codes like &4 or &e
 #You can use %target% only in YES/NO_BROADCAST and TARGET_OFFLINE messages
 #If you want disable a message, set it to ""
 
 RANK_NOT_FOUND: "&cLe grade &e%rank%&c n'existe pas."
-VOTE_BROADCAST: "&e%player%&a se propose pour être &e%rank%&e ! Votez avec /oui:non %player%."
+RANK_ALREADY_SAVED: "&cLe grade &e%rank%&c est déjà dans la liste."
+VOTE_BROADCAST: "&e%player%&a se propose pour être &e%rank%&a ! Votez avec /vote <oui | non> %player%."
 YES_BROADCAST: "&a%player% a voté &eoui&a pour &e%target%&a."
-NO_BROADCAST: "&a%player% a voté &coui&a pour &e%target%&a."
+NO_BROADCAST: "&a%player% a voté &cnon&a pour &e%target%&a."
 PLAYER_RANKUP: "&e%player%&a a été promu &e%rank%"
 TARGET_OFFLINE: "&eMtarget%c n'est pas connecté(e)."
-RANK_ADDED: "&eLe grade &e%rank%&a a été &eajouté&a à la liste."
-RANK_REMOVED: "&eLe grade &e%rank%&a a été &csupprimé&a de la liste."
+RANK_ADDED: "&aLe grade &e%rank%&a a été &eajouté&a à la liste."
+RANK_REMOVED: "&aLe grade &e%rank%&a a été &csupprimé&a de la liste."
+
+ranks:
