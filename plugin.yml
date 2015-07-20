@@ -1,0 +1,9 @@
+name: RankVoter
+author: TriiNoxYs
+version: 1.0.0
+main: fr.TriiNoxYs.RankVoter.Main
+commands:
+  rankvoter:
+    description: Command principale RankVoter.
+  vote:
+    description: Voter pour proumouvoir un joueur ou vous proposer.
