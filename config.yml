@@ -1,7 +1,12 @@
 votes-requiered: 6
+mayor-derank-delay: 5
+default-rank: "Citoyen"
 
 #You can use %player% to write the player's name, %rank% to write the rank and the color codes like &4 or &e
 #You can use %target% only in YES/NO_BROADCAST and TARGET_OFFLINE messages
+#You can use %mayor% only in MAYOR_ALREADY_EXISTS and MAYOR_DERANKED messages
+#You can use %time% only in MAYOR_DERANKED message
+
 #If you want disable a message, set it to ""
 
 RANK_NOT_FOUND: "&cLe grade &e%rank%&c n'existe pas."
@@ -13,5 +18,12 @@ PLAYER_RANKUP: "&e%player%&a a été promu &e%rank%"
 TARGET_OFFLINE: "&eMtarget%c n'est pas connecté(e)."
 RANK_ADDED: "&aLe grade &e%rank%&a a été &eajouté&a à la liste."
 RANK_REMOVED: "&aLe grade &e%rank%&a a été &csupprimé&a de la liste."
+ALREADY_VOTED: "&cVous avez déjà voté !"
+CANT_VOTE_YOURSELF: "&cVous ne pouvez pas voter pour vous."
+MAYOR_ALREADY_EXISTS: "&cIl y a déjà un maire: &e%mayor%&c."
+MAYOR_DERANKED: "&a&lLe maire &e%mayor%&a&l est resté déconnecté %time%mins et a été dégradé !"
+
+
+mayor: Jimoux
 
 ranks:

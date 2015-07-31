@@ -7,7 +7,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements Listener{
@@ -15,6 +17,7 @@ public class Main extends JavaPlugin implements Listener{
     private FileConfiguration config;
     private HashMap<Player, String> askedRank = new HashMap<Player, String>();
     private HashMap<Player, Integer> votes = new HashMap<Player, Integer>();
+    private HashMap<String, ArrayList<String>> voters = new HashMap<String, ArrayList<String>>();
     
     public void onEnable(){
         if (!getDataFolder().exists())
@@ -111,13 +114,19 @@ public class Main extends JavaPlugin implements Listener{
                     ArrayList<String> ranks = (ArrayList<String>) config.getStringList("ranks");
                     
                     if(ranks.contains(args[0])){
-                        Bukkit.broadcastMessage(config
-                                .getString("VOTE_BROADCAST")
+                        if(config.getString("mayor") == ""){
+                            Bukkit.broadcastMessage(config
+                                    .getString("VOTE_BROADCAST")
+                                    .replaceAll("%player%", p.getName())
+                                    .replaceAll("%rank%", args[0])
+                                    .replace('&', '§'));
+                            askedRank.put(p, args[0]);
+                            votes.put(p, 0); 
+                        }
+                        else p.sendMessage(config.getString("MAYOR_ALREADY_EXISTS")
                                 .replaceAll("%player%", p.getName())
-                                .replaceAll("%rank%", args[0])
+                                .replaceAll("%mayor%", config.getString("mayor"))
                                 .replace('&', '§'));
-                        askedRank.put(p, args[0]);
-                        votes.put(p, 0);
                     }else{
                         p.sendMessage(config.getString("RANK_NOT_FOUND")
                                 .replaceAll("%player%", p.getName())
@@ -130,37 +139,69 @@ public class Main extends JavaPlugin implements Listener{
                     
                     if(args[0].equalsIgnoreCase("oui")){
                         if(target != null){
-                            votes.put(p, votes.get(p) + 1);
-                            Bukkit.broadcastMessage(config
-                                    .getString("YES_BROADCAST")
+                            if(target != p){
+                                if(!voters.get(target.getName()).contains(p.getName())){
+                                    votes.put(target, votes.get(p) + 1);
+                                    voters.get(target.getName()).add(p.getName());
+                                    Bukkit.broadcastMessage(config
+                                            .getString("YES_BROADCAST")
+                                            .replaceAll("%player%", p.getName())
+                                            .replaceAll("%target%", target.getName())
+                                            .replaceAll("%rank%", askedRank.get(target))
+                                            .replace('&', '§'));
+                                    if(votes.get(target) >= config.getInt("votes-requiered")){
+                                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"manuadd " + p.getName() + " " + askedRank.get(p));
+                                        Bukkit.broadcastMessage(config
+                                                .getString("PLAYER_RANKUP")
+                                                .replaceAll("%player%", p.getName())
+                                                .replaceAll("%rank%", askedRank.get(target))
+                                                .replace('&', '§'));
+                                        askedRank.put(target, null);
+                                        votes.put(target, null);
+                                        voters.put(target.getName(), null);
+                                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuadd " + target.getName() + " " + askedRank.get(target));
+                                        if(askedRank.get(target).equalsIgnoreCase("Maire")){
+                                            getConfig().set("mayor", target.getName());
+                                            saveConfig();
+                                        }
+                                    }
+                                }
+                                else p.sendMessage(config.getString("ALREADY_VOTED")
+                                        .replaceAll("%player%", p.getName())
+                                        .replaceAll("%target%", target.getName())
+                                        .replace('&', '§'));
+                            }
+                            else p.sendMessage(config.getString("CANT_VOTE_YOURSELF")
                                     .replaceAll("%player%", p.getName())
                                     .replaceAll("%target%", target.getName())
-                                    .replaceAll("%rank%", askedRank.get(target))
                                     .replace('&', '§'));
-                            if(votes.get(p) >= config.getInt("votes-requiered")){
-                                Bukkit.dispatchCommand(
-                                        Bukkit.getConsoleSender(),"manuadd " + p.getName() + " " + askedRank.get(p));
-                                Bukkit.broadcastMessage(config
-                                        .getString("PLAYER_RANKUP")
-                                        .replaceAll("%player%", p.getName())
-                                        .replaceAll("%rank%", askedRank.get(target))
-                                        .replace('&', '§'));
-                                askedRank.put(p, null);
-                                votes.put(p, null);
-                            }
+                            
                         }else p.sendMessage(config.getString("TARGET_OFFLINE")
                                 .replaceAll("%player%", p.getName())
                                 .replaceAll("%target%", args[1])
                                 .replace('&', '§'));
                     }else if(args[0].equalsIgnoreCase("non")){
                         if(target != null){
-                            votes.put(p, votes.get(p) - 1);
-                            Bukkit.broadcastMessage(config
-                                    .getString("NO_BROADCAST")
+                            if(target != p){
+                                if(!voters.get(target.getName()).contains(p.getName())){
+                                    votes.put(target, votes.get(p) - 1);
+                                    Bukkit.broadcastMessage(config
+                                            .getString("NO_BROADCAST")
+                                            .replaceAll("%player%", p.getName())
+                                            .replaceAll("%target%", target.getName())
+                                            .replaceAll("%rank%", askedRank.get(target))
+                                            .replace('&', '§'));
+                                }
+                                else p.sendMessage(config.getString("ALREADY_VOTED")
+                                        .replaceAll("%player%", p.getName())
+                                        .replaceAll("%target%", target.getName())
+                                        .replace('&', '§'));
+                            }
+                            else p.sendMessage(config.getString("CANT_VOTE_YOURSELF")
                                     .replaceAll("%player%", p.getName())
                                     .replaceAll("%target%", target.getName())
-                                    .replaceAll("%rank%", askedRank.get(target))
                                     .replace('&', '§'));
+                            
                         }else p.sendMessage(config.getString("TARGET_OFFLINE")
                                 .replaceAll("%player%", p.getName())
                                 .replaceAll("%target%", args[1])
@@ -174,6 +215,32 @@ public class Main extends JavaPlugin implements Listener{
             }
         }else sender.sendMessage("You must be a player to perform this command !");
         return false;
+    }
+    
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        final Player p = e.getPlayer();
+        final String pName = p.getName();
+        
+        if(config.getString("mayor").equalsIgnoreCase(p.getName())){
+            getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+                
+                public void run(){
+                    boolean reco = false;
+                    for(Player pl : Bukkit.getOnlinePlayers()){
+                        if(pl.equals(p)){
+                            reco = true;
+                            return;
+                        }
+                    }
+                    if(reco == false){
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuadd " + pName + " " + config.getString("default-rank"));
+                        getConfig().set("mayor", null);
+                        Bukkit.broadcastMessage(config.getString("MAYOR_DERANKED").replaceAll("%mayor", pName).replaceAll("%time%", String.valueOf(config.getInt("mayor-derank-delay"))).replace('&', '§'));
+                    }
+                }
+            }, config.getInt("mayor-derank-delay")*60*20);
+        }
     }
     
 }
