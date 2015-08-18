@@ -140,7 +140,8 @@ public class Main extends JavaPlugin implements Listener{
                     if(args[0].equalsIgnoreCase("oui")){
                         if(target != null){
                             if(target != p){
-                                if(!voters.get(target.getName()).contains(p.getName())){
+                                if(voters.get(target.getName()) == null || !voters.get(target.getName()).contains(p.getName())){
+                                    if(voters.get(target.getName()) == null) voters.put(target.getName(), new ArrayList<String>());
                                     votes.put(target, votes.get(p) + 1);
                                     voters.get(target.getName()).add(p.getName());
                                     Bukkit.broadcastMessage(config
@@ -150,7 +151,6 @@ public class Main extends JavaPlugin implements Listener{
                                             .replaceAll("%rank%", askedRank.get(target))
                                             .replace('&', '§'));
                                     if(votes.get(target) >= config.getInt("votes-requiered")){
-                                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"manuadd " + p.getName() + " " + askedRank.get(p));
                                         Bukkit.broadcastMessage(config
                                                 .getString("PLAYER_RANKUP")
                                                 .replaceAll("%player%", p.getName())
@@ -220,7 +220,6 @@ public class Main extends JavaPlugin implements Listener{
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
         final Player p = e.getPlayer();
-        final String pName = p.getName();
         
         if(config.getString("mayor").equalsIgnoreCase(p.getName())){
             getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
@@ -234,9 +233,9 @@ public class Main extends JavaPlugin implements Listener{
                         }
                     }
                     if(reco == false){
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuadd " + pName + " " + config.getString("default-rank"));
-                        getConfig().set("mayor", null);
-                        Bukkit.broadcastMessage(config.getString("MAYOR_DERANKED").replaceAll("%mayor", pName).replaceAll("%time%", String.valueOf(config.getInt("mayor-derank-delay"))).replace('&', '§'));
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuadd " + p.getName() + " " + config.getString("default-rank"));
+                        getConfig().set("mayor", "");
+                        Bukkit.broadcastMessage(config.getString("MAYOR_DERANKED").replaceAll("%mayor%", p.getName()).replaceAll("%time%", String.valueOf(config.getInt("mayor-derank-delay"))).replace('&', '§'));
                     }
                 }
             }, config.getInt("mayor-derank-delay")*60*20);
