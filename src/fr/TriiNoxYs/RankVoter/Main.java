@@ -141,7 +141,8 @@ public class Main extends JavaPlugin implements Listener{
                         if(target != null){
                             if(target != p){
                                 if(voters.get(target.getName()) == null || !voters.get(target.getName()).contains(p.getName())){
-                                    if(voters.get(target.getName()) == null) voters.put(target.getName(), new ArrayList<String>());
+                                    if(voters.get(target.getName()) == null) 
+                                        voters.put(target.getName(), new ArrayList<String>());
                                     votes.put(target, votes.get(p) + 1);
                                     voters.get(target.getName()).add(p.getName());
                                     Bukkit.broadcastMessage(config
@@ -183,7 +184,9 @@ public class Main extends JavaPlugin implements Listener{
                     }else if(args[0].equalsIgnoreCase("non")){
                         if(target != null){
                             if(target != p){
-                                if(!voters.get(target.getName()).contains(p.getName())){
+                                if(voters.get(target.getName()) == null || !voters.get(target.getName()).contains(p.getName())){
+                                    if(voters.get(target.getName()) == null) 
+                                        voters.put(target.getName(), new ArrayList<String>());
                                     votes.put(target, votes.get(p) - 1);
                                     Bukkit.broadcastMessage(config
                                             .getString("NO_BROADCAST")
