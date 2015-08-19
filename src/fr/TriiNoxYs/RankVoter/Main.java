@@ -151,20 +151,24 @@ public class Main extends JavaPlugin implements Listener{
                                             .replaceAll("%target%", target.getName())
                                             .replaceAll("%rank%", askedRank.get(target))
                                             .replace('&', '§'));
+                                    
                                     if(votes.get(target) >= config.getInt("votes-requiered")){
                                         Bukkit.broadcastMessage(config
                                                 .getString("PLAYER_RANKUP")
                                                 .replaceAll("%player%", p.getName())
+                                                .replaceAll("%target%", p.getName())
                                                 .replaceAll("%rank%", askedRank.get(target))
                                                 .replace('&', '§'));
-                                        askedRank.put(target, null);
-                                        votes.put(target, null);
-                                        voters.put(target.getName(), null);
                                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "manuadd " + target.getName() + " " + askedRank.get(target));
+                                        
                                         if(askedRank.get(target).equalsIgnoreCase("Maire")){
                                             getConfig().set("mayor", target.getName());
                                             saveConfig();
                                         }
+                                        
+                                        askedRank.put(target, null);
+                                        votes.put(target, null);
+                                        voters.put(target.getName(), null);
                                     }
                                 }
                                 else p.sendMessage(config.getString("ALREADY_VOTED")
