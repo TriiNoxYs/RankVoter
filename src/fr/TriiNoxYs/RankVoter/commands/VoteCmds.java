@@ -28,8 +28,7 @@ public class VoteCmds implements CommandExecutor{
                     
                     if(ranks.contains(args[0])){
                         if(config.getString("mayor").equalsIgnoreCase(" ")){
-                            Bukkit.broadcastMessage(config
-                                    .getString("VOTE_BROADCAST")
+                            Bukkit.broadcastMessage(config.getString("VOTE_BROADCAST")
                                     .replaceAll("%player%", p.getName())
                                     .replaceAll("%rank%", args[0])
                                     .replace('&', '§'));
@@ -61,8 +60,7 @@ public class VoteCmds implements CommandExecutor{
                                     
                                     Main.votes.put(target, Main.votes.get(p) + 1);
                                     Main.alreadyVoted.get(target.getName()).add(p.getName());
-                                    Bukkit.broadcastMessage(config
-                                            .getString("YES_BROADCAST")
+                                    Bukkit.broadcastMessage(config.getString("YES_BROADCAST")
                                             .replaceAll("%player%", target.getName())
                                             .replaceAll("%target%", p.getName())
                                             .replaceAll("%rank%", Main.askedRank.get(target))
