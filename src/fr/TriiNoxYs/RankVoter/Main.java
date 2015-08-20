@@ -14,12 +14,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements Listener{
     
+    public static Main plugin;
+    
     private FileConfiguration config;
-    private HashMap<Player, String> askedRank = new HashMap<Player, String>();
-    private HashMap<Player, Integer> votes = new HashMap<Player, Integer>();
-    private HashMap<String, ArrayList<String>> voters = new HashMap<String, ArrayList<String>>();
+    public static HashMap<Player, String> askedRank = new HashMap<Player, String>();
+    public static HashMap<Player, Integer> votes = new HashMap<Player, Integer>();
+    public static HashMap<String, ArrayList<String>> alreadyVoted = new HashMap<String, ArrayList<String>>();
     
     public void onEnable(){
+        
+        plugin = this;
+        
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
         
@@ -140,11 +145,11 @@ public class Main extends JavaPlugin implements Listener{
                     if(args[0].equalsIgnoreCase("oui")){
                         if(target != null){
                             if(target != p){
-                                if(voters.get(target.getName()) == null || !voters.get(target.getName()).contains(p.getName())){
-                                    if(voters.get(target.getName()) == null) 
-                                        voters.put(target.getName(), new ArrayList<String>());
+                                if(alreadyVoted.get(target.getName()) == null || !alreadyVoted.get(target.getName()).contains(p.getName())){
+                                    if(alreadyVoted.get(target.getName()) == null) 
+                                        alreadyVoted.put(target.getName(), new ArrayList<String>());
                                     votes.put(target, votes.get(p) + 1);
-                                    voters.get(target.getName()).add(p.getName());
+                                    alreadyVoted.get(target.getName()).add(p.getName());
                                     Bukkit.broadcastMessage(config
                                             .getString("YES_BROADCAST")
                                             .replaceAll("%player%", p.getName())
@@ -168,7 +173,7 @@ public class Main extends JavaPlugin implements Listener{
                                         
                                         askedRank.put(target, null);
                                         votes.put(target, null);
-                                        voters.put(target.getName(), null);
+                                        alreadyVoted.put(target.getName(), null);
                                     }
                                 }
                                 else p.sendMessage(config.getString("ALREADY_VOTED")
@@ -188,9 +193,9 @@ public class Main extends JavaPlugin implements Listener{
                     }else if(args[0].equalsIgnoreCase("non")){
                         if(target != null){
                             if(target != p){
-                                if(voters.get(target.getName()) == null || !voters.get(target.getName()).contains(p.getName())){
-                                    if(voters.get(target.getName()) == null) 
-                                        voters.put(target.getName(), new ArrayList<String>());
+                                if(alreadyVoted.get(target.getName()) == null || !alreadyVoted.get(target.getName()).contains(p.getName())){
+                                    if(alreadyVoted.get(target.getName()) == null) 
+                                        alreadyVoted.put(target.getName(), new ArrayList<String>());
                                     votes.put(target, votes.get(p) - 1);
                                     Bukkit.broadcastMessage(config
                                             .getString("NO_BROADCAST")

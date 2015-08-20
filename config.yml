@@ -1,5 +1,15 @@
 votes-requiered: 6
+
+#Time until the mayor will be derank if he quit the server, in minutes
 mayor-derank-delay: 5
+derank-mayor-on-death: true
+derank-mayor-on-quit: true
+
+#Time until a player will be derank if he quit the server, in minutes
+player-derank-delay: 5
+derank-players-on-death: false
+derank-players-on-quit: false
+
 default-rank: "Citoyen"
 
 #You can use %player% to write the player's name, %rank% to write the rank and the color codes like &4 or &e
@@ -21,9 +31,12 @@ RANK_REMOVED: "&aLe grade &e%rank%&a a été &csupprimé&a de la liste."
 ALREADY_VOTED: "&cVous avez déjà voté !"
 CANT_VOTE_YOURSELF: "&cVous ne pouvez pas voter pour vous."
 MAYOR_ALREADY_EXISTS: "&cIl y a déjà un maire: &e%mayor%&c."
-MAYOR_DERANKED: "&a&lLe maire &e%mayor%&a&l est resté déconnecté %time%mins et a été dégradé !"
+MAYOR_QUIT_DERANKED: "&a&lLe maire &e%mayor%&a&l est resté déconnecté %time%mins et a été dégradé !"
+MAYOR__DEATH_DERANKED: "&a&lLe maire &e%mayor%&a&l est mort et a été dégradé !"
+PLAYER_QUIT_DERANKED: "&a&lLe joueur &e%player%&a&l est mort et a été dégradé !"
+PLAYER_DEATH_DERANKED: "&a&lLe joueur &e%player%&a&l est mort et a été dégradé !"
 
 
-mayor: Jimoux
+mayor: " "
 
 ranks:
