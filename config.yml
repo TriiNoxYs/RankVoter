@@ -37,6 +37,9 @@ PLAYER_QUIT_DERANKED: "&a&lLe joueur &e%player%&a&l est mort et a été dégrad�
 PLAYER_DEATH_DERANKED: "&a&lLe joueur &e%player%&a&l est mort et a été dégradé !"
 
 
+#--------------------------------------------------------------------------------------------------------------#
+
+
 mayor: " "
 
 ranks:
