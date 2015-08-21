@@ -77,7 +77,6 @@ public class VoteCmds implements CommandExecutor{
                                         
                                         Main.askedRank.put(target, null);
                                         Main.votes.put(target, null);
-                                        Main.alreadyVoted.get(target).add(p.getName());
                                     }
                                 }
                                 else p.sendMessage(config.getString("ALREADY_VOTED")
@@ -111,7 +110,7 @@ public class VoteCmds implements CommandExecutor{
                                             .replaceAll("%rank%", Main.askedRank.get(target))
                                             .replace('&', '§'));
                                     
-                                    Main.alreadyVoted.get(target).add(p.getName());
+                                    Main.alreadyVoted.get(target.getName()).add(p.getName());
                                 }
                                 else p.sendMessage(config.getString("ALREADY_VOTED")
                                         .replaceAll("%player%", p.getName())
