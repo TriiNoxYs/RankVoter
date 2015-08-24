@@ -11,10 +11,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import fr.TriiNoxYs.RankVoter.utils.Updater;
 
 public class Main extends JavaPlugin implements Listener{
     
     public static Main plugin;
+    public Updater updater;
     
     private FileConfiguration config;
     public static HashMap<Player, String> askedRank = new HashMap<Player, String>();
@@ -22,22 +24,26 @@ public class Main extends JavaPlugin implements Listener{
     public static HashMap<String, ArrayList<String>> alreadyVoted = new HashMap<String, ArrayList<String>>();
     
     public void onEnable(){
-        
+
         plugin = this;
+        
+        updater = new Updater(this);
+        Updater.checkUpdate(true);
         
         if (!getDataFolder().exists())
             getDataFolder().mkdir();
         
         saveDefaultConfig();
         config = getConfig();
-        
+            
         Bukkit.getPluginManager().registerEvents(this, this);
-        
+            
         if(config.getString("votes-requiered").equals(null) || config.getString("votes-requiered") == ""){
             Bukkit.broadcastMessage("§8[&4RANKVOTER§8] §cError in config.yml, please contact Staff.");
             Bukkit.broadcastMessage("§8[&4RANKVOTER§8] §cDisabling RankVoter.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+        
     }
     
     public void onDisable(){

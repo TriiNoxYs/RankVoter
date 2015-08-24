@@ -11,14 +11,29 @@ import fr.TriiNoxYs.RankVoter.Main;
 
 public class RankVoterCmds implements CommandExecutor{
     
-    private FileConfiguration config = Main.plugin.getConfig();
+    private Main plugin;
+    
+    public RankVoterCmds(Main instance){
+        plugin = instance;
+    }
+    
+    private FileConfiguration config = plugin.getConfig();
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         if(sender instanceof Player){
             Player p = (Player) sender;
             
             if(label.equalsIgnoreCase("rankvoter")){
-                if(args.length == 0){
+                //----- UPDATE -----//
+                if(args[0].equalsIgnoreCase("version") || args[0].equalsIgnoreCase("ver")){
+                    sender.sendMessage(plugin.getDescription().getFullName()); 
+                }
+                else if(args[0].equalsIgnoreCase("update")){
+                    plugin.updater.updateCommand(sender, args);
+                }
+                
+                //----- COMMANDS -----//
+                else if(args.length == 0){
                     p.sendMessage("§cUsage: /rankvoter <add | remove | infos> [rank]");
                 }
                 else if(args.length >= 1){
@@ -27,7 +42,7 @@ public class RankVoterCmds implements CommandExecutor{
                         p.sendMessage("§8-------------------------");
                         p.sendMessage("§a Développeur: §eTriiNoxYs");
                         p.sendMessage("§a Plugin: §eRankVoter");
-                        p.sendMessage("§a Version: §e"+ Main.plugin.getDescription().getVersion());
+                        p.sendMessage("§a Version: §e"+ plugin.getDescription().getVersion());
                         p.sendMessage("§8-------------------------");
                     }
                     else if(args[0].equalsIgnoreCase("add")){
@@ -49,8 +64,8 @@ public class RankVoterCmds implements CommandExecutor{
                                             .replaceAll("%player%", p.getName())
                                             .replaceAll("%rank%", args[1])
                                             .replace('&', '§'));
-                                    Main.plugin.getConfig().set("ranks", ranks);
-                                    Main.plugin.saveConfig();
+                                    plugin.getConfig().set("ranks", ranks);
+                                    plugin.saveConfig();
                                     return true;
                                 }
                             } 
@@ -70,8 +85,8 @@ public class RankVoterCmds implements CommandExecutor{
                                             .replaceAll("%rank%", args[1])
                                             .replace('&', '§'));
                                     ranks.remove(args[1]);
-                                    Main.plugin.getConfig().set("ranks", ranks);
-                                    Main.plugin.saveConfig();
+                                    plugin.getConfig().set("ranks", ranks);
+                                    plugin.saveConfig();
                                     return true;
                                  }else{
                                      p.sendMessage(config.getString("RANK_NOT_FOUND")
